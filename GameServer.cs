@@ -60,7 +60,7 @@ namespace SRCDSMonitor
                 strBuilder.AppendFormat("-console -game \"{0}\" +rcon_password \"{1}\" +port {2} ", _data["gameroot"], _rconPassword, _port);
 
                 KeyValuePair<string, string>[] kvs = _data.ToArray();
-                for (int i = 5; i < kvs.Count(); i++) // Skip the first 4 base cmds.
+                for (int i = 5; i < kvs.Count(); i++) // Skip the first 5 base cmds.
                     strBuilder.AppendFormat("{0} {1} ", kvs[i].Key, kvs[i].Value);
 
                 Process serverProcess = new Process();

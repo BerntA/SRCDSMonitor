@@ -149,9 +149,12 @@ namespace SRCDSMonitor
             }
             finally
             {
-                reader.Close();
-                reader.Dispose();
-                reader = null;
+                if (reader != null)
+                {
+                    reader.Close();
+                    reader.Dispose();
+                    reader = null;
+                }
             }
         }
     }
