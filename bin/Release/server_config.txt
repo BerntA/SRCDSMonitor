@@ -1,0 +1,20 @@
+// Separate keys with tabs
+// Base - DON'T CHANGE THE ORDER
+// extendedcrashchecking will use RCON heartbeat concept, if there is no reply from the server within 3 sec it will be restarted, currently this command will restart servers when they changemap, still WIP!
+// hidewindow will hide the srcds.exe window, you can write any commands via the SRCDS Monitor interface as if you typed it in the srcds server interface.
+// game is just a name and is not mandatory.
+// REMEMBER to set the right +port, otherwise 27015 will be used.
+// DISCLAIMER: A random rcon_password will be chosen everytime you launch the app.
+game	BrainBread2
+gameroot	C:\Program Files\Steam\steamapps\common\brainbread2ds\brainbread2
+srcds	C:\Program Files\Steam\steamapps\common\brainbread2ds\srcds.exe
+extendedcrashchecking	1
+hidewindow	1
+// Server CVARS passed as params to srcds.exe - ADD or REMOVE anything you like under this line. (except for +port)
++maxplayers	10
++hostname	"My AWESOME Monitored Game Server!"
++exec	server.cfg
+-tickrate	33
++sv_password	greatpassword
++port	27015
++map	example_map

@@ -1,0 +1,39 @@
+# Files to ignore when considering what GIT should commit.
+
+# Visual Studio
+*.obj
+*.cache
+*.pdb
+*.idb
+*.tlog
+*.exp
+*.pch
+*.log
+*.ilk
+*.scc
+*.sln.docstates
+*.suo
+*.sdf
+*.opensdf
+*.lastbuildstate
+*.write.1.tlog
+*.sentinel
+*.user
+*.filters
+*.DS_Store
+*.TemporaryItems
+*.hgignore
+*.TMP
+*.tmp
+*.vpc_crc
+
+# Version Controlling
+*.hg
+/.hg/*
+hg
+
+# Misc Folders
+Debug/*
+Release/*
+obj/*
+Shared/*
