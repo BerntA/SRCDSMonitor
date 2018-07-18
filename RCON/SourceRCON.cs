@@ -17,11 +17,13 @@ namespace SRCDSMonitor.RCON
         protected IPAddress _ipAddress;
         protected string _password;
         protected string _port;
+        protected bool _goldSrc;
 
-        public SourceRCON(string address, string port, string password)
+        public SourceRCON(string address, string port, string password, bool goldSrc)
         {
             _password = password;
             _port = port;
+            _goldSrc = goldSrc;
             _ipAddress = null;
 
             // Allow using a DNS server instead of a raw IP only.

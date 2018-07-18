@@ -16,8 +16,8 @@ namespace SRCDSMonitor.RCON
 {
     public class SimpleRCON : SourceRCON
     {
-        public SimpleRCON(string address, string port, string password)
-            : base(address, port, password)
+        public SimpleRCON(string address, string port, string password, bool goldSrc)
+            : base(address, port, password, goldSrc)
         {
         }
 
@@ -26,7 +26,7 @@ namespace SRCDSMonitor.RCON
             try
             {
                 string reply = null;
-                using (var server = ServerQuery.GetServerInstance(EngineType.Source, new IPEndPoint(_ipAddress, int.Parse(_port))))
+                using (var server = ServerQuery.GetServerInstance(_goldSrc ? EngineType.GoldSource : EngineType.Source, new IPEndPoint(_ipAddress, int.Parse(_port))))
                 {
                     if (server.GetControl(_password))
                     {

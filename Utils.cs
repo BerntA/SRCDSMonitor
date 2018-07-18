@@ -49,5 +49,19 @@ namespace SRCDSMonitor
                 return null;
             }
         }
+
+        public static string GetStringForList(List<string> input)
+        {
+            if (input.Count() > 0)
+            {
+                StringBuilder bldr = new StringBuilder();
+                foreach (string s in input)
+                    bldr.Append(string.Format("{0} ", s));
+
+                return bldr.ToString();
+            }
+
+            return string.Empty;
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace SRCDSMonitor
         private string _rconPassword;
         private bool _extendedCrashChecking;
         private bool _hideWindow;
+        private bool _isGoldSrc;
         private Dictionary<string, string> _data;
         private SimpleRCON _rconObj;
         private Process _serverProcess;
@@ -40,7 +41,8 @@ namespace SRCDSMonitor
             _data = data;
             _extendedCrashChecking = _data.ContainsKey("extendedcrashchecking") ? _data["extendedcrashchecking"].Equals("1") : false;
             _hideWindow = _data.ContainsKey("hidewindow") ? _data["hidewindow"].Equals("1") : false;
-            _rconObj = new SimpleRCON(_address, _port, _rconPassword);
+            _isGoldSrc = _data.ContainsKey("hlds");
+            _rconObj = new SimpleRCON(_address, _port, _rconPassword, _isGoldSrc);
             _serverProcess = null;
         }
 
@@ -57,11 +59,10 @@ namespace SRCDSMonitor
             try
             {
                 StringBuilder strBuilder = new StringBuilder();
-                strBuilder.AppendFormat("-console -game \"{0}\" +rcon_password \"{1}\" +port {2} ", _data["gameroot"], _rconPassword, _port);
-
-                KeyValuePair<string, string>[] kvs = _data.ToArray();
-                for (int i = 5; i < kvs.Count(); i++) // Skip the first 5 base cmds.
-                    strBuilder.AppendFormat("{0} {1} ", kvs[i].Key, kvs[i].Value);
+                strBuilder.AppendFormat("-console -game {0} +rcon_password \"{1}\" +port {2} ", _isGoldSrc ? Path.GetFileNameWithoutExtension(_data["gameroot"]) : _data["gameroot"], _rconPassword, _port);
+                strBuilder.Append(Utils.GetStringForList(Program._commandLineOptions));
+                if (serverCrashed)
+                    strBuilder.Append(Utils.GetStringForList(Program._crashedCommandLineOptions));
 
                 Process serverProcess = new Process();
                 serverProcess.EnableRaisingEvents = true;
@@ -70,8 +71,8 @@ namespace SRCDSMonitor
                 serverProcess.StartInfo.ErrorDialog = false;
                 serverProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 serverProcess.StartInfo.CreateNoWindow = true;
-                serverProcess.StartInfo.FileName = _data["srcds"];
-                serverProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(_data["srcds"]);
+                serverProcess.StartInfo.FileName = _isGoldSrc ? _data["hlds"] : _data["srcds"];
+                serverProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(_isGoldSrc ? _data["hlds"] : _data["srcds"]);
                 serverProcess.StartInfo.Arguments = strBuilder.ToString();
                 serverProcess.Start();
                 _serverProcess = serverProcess;
@@ -94,11 +95,13 @@ namespace SRCDSMonitor
 
             serverCrashed = status;
             _rconObj.SendCommand("disconnect"); // Drop everyone from the server.
-            Thread.Sleep(250);
-            _rconObj.SendCommand("quit"); // Run a proper clean quit.
-            Thread.Sleep(250);
-            TerminateProgram(_serverProcess); // If the server still is up, force a kill.
+            Thread.Sleep(100);
+
+            if (_rconObj.SendCommand("quit") == null) // Run a proper clean quit.            
+                TerminateProgram(_serverProcess); // Couldn't quit safely, kill process.
+
             _serverProcess = null;
+            Thread.Sleep(100);
         }
 
         public void MonitorGameServer()

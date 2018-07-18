@@ -1,0 +1,2 @@
+// Separate keys with tabs
+// Whenever the server crashes, these cmds will be passed to the command line when the crashed server restarts!
